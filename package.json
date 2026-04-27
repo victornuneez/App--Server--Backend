@@ -1,0 +1,28 @@
+{
+  "name": "app--server--backend-",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/victornuneez/App--Server--Backend-.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "bugs": {
+    "url": "https://github.com/victornuneez/App--Server--Backend-/issues"
+  },
+  "homepage": "https://github.com/victornuneez/App--Server--Backend-#readme",
+  "dependencies": {
+    "dotenv": "17.4.2",
+    "express": "5.2.1",
+    "mongodb": " 7.2.0",
+    "mongoose": "9.5.0",
+    "nodemon": "3.1.14"
+  }
+}
