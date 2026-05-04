@@ -1,15 +1,15 @@
 import mongoose from 'mongoose';
 
-const link = new mongoose.Schema({
-    title: { type: String, required: true, trim: true, unique: true },
+const linkSchema = new mongoose.Schema({
+    title: { type: String, required: true, trim: true },
     url : { type: String, required: true, trim: true, unique: true },
     vote: { type: Number, default: 0 },
-    comment: { type: String, trim: true, default:"Sin comentarios aun" },
-    tag: { type: mongoose.Schema.Types.ObjectId, ref: 'Tag' }
+    comments: [{ type: String,  maxlength: 100 }],
+    tag: { type: mongoose.Schema.Types.ObjectId, ref: 'Tag', required: true }
 }, {
     timestamps: true,
     versionKey: false  
 });
 
-const Link = mongoose.model('Link', link);
+const Link = mongoose.model('Link', linkSchema);
 export default Link;
