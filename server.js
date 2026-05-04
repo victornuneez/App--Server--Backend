@@ -1,6 +1,8 @@
 import express from 'express';
-import { connectDB } from './config.js'
-import linksRoutes from './routes/linksRoutes.js'
+import { connectDB } from './config.js';
+import userRoutes from './routes/userRoutes.js';
+import appRoutes from './routes/appRoutes.js';
+import cors from 'cors';
 import dotenv from 'dotenv';
 dotenv.config();
 
@@ -11,8 +13,11 @@ connectDB();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true}))
 
-app.use('/api/links', linksRoutes)
+app.use(cors());
 
-app.listen(3000, () => {
-    console.log('Server run on http://localhost:3000')
+app.use('/api', userRoutes);
+app.use('/app', appRoutes);
+
+app.listen(process.env.PORT, () => {
+    console.log(`Server run on http://localhost:${process.env.PORT}`)
 })
