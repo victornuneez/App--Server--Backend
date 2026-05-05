@@ -5,10 +5,10 @@ import Tag from '../models/tagCollection.js';
 const createLinks = async (req, res) => {
     try {
 
-        const { title, url, tagName } = req.body;
+        const { title, url, tag } = req.body;
         
         // Validamos si completaron los campos de titulo y enlace
-        if(!title || !url || !tagName) {
+        if(!title || !url || !tag) {
             return res.status(400).json({ message : "Titulo, enlace o etiqueta no encontradas"});
         }
         
@@ -20,11 +20,11 @@ const createLinks = async (req, res) => {
         }
         
         // Buscamos si la etiqueta ya existe en la base de datos
-        let tagDoc = await Tag.findOne({ name: tagName.trim() })
+        let tagDoc = await Tag.findOne({ name: tag.trim() })
         
         // Si no existe la etiqueta en la base de datos, la creamos y la guardamos
         if(!tagDoc) {
-            tagDoc = new Tag({ name: tagName.trim() });
+            tagDoc = new Tag({ name: tag.trim() });
             await tagDoc.save();
         }
         
@@ -40,15 +40,15 @@ const createLinks = async (req, res) => {
 
 
 const createTag = async(req, res) => {
-    const { tag } = req.body;
+    const { name } = req.body;
     
     try {
-        if(!tag) {
+        if(!name) {
             res.status(400).json({ message: "Etiqueta no encontrada"});
         }
         
-        const newTag = new Tag({ tag : tag });
-        const savedTag = await newTag.save();
+        const newName = new Tag({ name : name });
+        const savedName = await newName.save();
         
         res.status(200).json({ message: "Etiqueta creada exitosamente" });
     
