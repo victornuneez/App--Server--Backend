@@ -19,16 +19,13 @@ const getLinkDetails = async (req, res) => {
 };
 
 const filterTags = async (req, res) => {
-    const { tag } = req.query;
+    const { id } = req.query;
     let filter = {};
 
     try {
-        if (tag && tag !== "Todos") {
-            const tagDoc = await Tag.findOne({ name : tag });
-
-            if(tagDoc) {
-                filter = { tag: tagDoc._id }; // armamos el filtro por id.
-            }
+        if(id && id !== "Todos") {
+            const tagDoc = await Tag.findOne({ tag : id });
+            filter = {tag: id};
         }
 
         // Si tag no viene en la URL, filter queda como un objeto vacio y Mongoose devuelve todo.
@@ -40,4 +37,15 @@ const filterTags = async (req, res) => {
     }
 };
 
-export { getLinkDetails, filterTags };
+const getTags = async (req, res) => {
+    try {
+        const tags = await Tag.find();
+        res.status(200).json(tags);
+    
+    } catch (error) {
+        return res.status(500).json({ message: "Error en el servidor", error: error.message });
+    }
+
+};
+
+export { getLinkDetails, filterTags, getTags };
