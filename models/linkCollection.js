@@ -3,6 +3,7 @@ import mongoose from 'mongoose';
 const linkSchema = new mongoose.Schema({
     title: { type: String, required: true, trim: true },
     url : { type: String, required: true, trim: true, unique: true },
+    description : { type: String, required: true },
     vote: { type: Number, default: 0 },
     comments: [{ type: String,  maxlength: 100 }],
     tag: { type: mongoose.Schema.Types.ObjectId, ref: 'Tag', required: true }
