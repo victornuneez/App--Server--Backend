@@ -5,10 +5,10 @@ import Tag from '../models/tagCollection.js';
 const createLinks = async (req, res) => {
     try {
 
-        const { title, url, tag } = req.body;
+        const { title, url, description, tag } = req.body;
         
         // Validamos si completaron los campos de titulo y enlace
-        if(!title || !url || !tag) {
+        if(!title || !url || !description ||!tag) {
             return res.status(400).json({ message : "Titulo, enlace o etiqueta no encontradas"});
         }
         
@@ -28,7 +28,7 @@ const createLinks = async (req, res) => {
             await tagDoc.save();
         }
         
-        const newLink = new Link({ title, url, tag: tagDoc._id });
+        const newLink = new Link({ title, url, description, tag: tagDoc._id });
         const savedItem = await newLink.save();
         
         res.status(201).json({ message: "Recurso creado exitosamente", data : savedItem });
@@ -73,7 +73,7 @@ const addComment = async (req, res) => {
             return res.status(404).json({ message: "Enlace no encontrado" });
         }
         
-        res.status(200).json(updateComment);
+        res.status(200).json({ comments: updateComment.comments});
     
     } catch (error) {
         return res.status(500).json({ message: "Error en el servidor", error: error.message });
@@ -91,7 +91,7 @@ const addVote = async (req, res) => {
             return res.status(404).json({ message: "Enlace no encontrado" });
         }
         
-        res.status(200).json({ message: "Enlace votado correctamente", data: updateVote })
+        res.status(200).json(updateVote);
     
     } catch (error) {
         return res.status(500).json({ message: "Error en el servidor", error: error.message });
