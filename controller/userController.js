@@ -57,6 +57,22 @@ const createTag = async(req, res) => {
     }
 };
 
+const updateLink = async(req, res) => {
+    const { id } = req.params;
+    const { title, url, description } = req.body;
+
+    if(!title || !url || !description) {
+        return res.status(400).json({ message : "Datos requeridos no encontrados" });
+    };
+
+    const updateItem = await Link.findByIdAndUpdate(id, { title, url, description });
+
+    if(!updateItem) {
+        return res.status(404).json({ message: "Recurso no encontrado" });
+    }
+
+    res.status(200).json({ message: "Recurso actualizado correctamente", data: updateItem })
+}
 
 const addComment = async (req, res) => {
     const { id } = req.params;
@@ -73,7 +89,7 @@ const addComment = async (req, res) => {
             return res.status(404).json({ message: "Enlace no encontrado" });
         }
         
-        res.status(200).json({ comments: updateComment.comments});
+        res.status(200).json({ comments: updateComment.comments}); // Devolvemos el arrey de comentarios
     
     } catch (error) {
         return res.status(500).json({ message: "Error en el servidor", error: error.message });
@@ -98,7 +114,28 @@ const addVote = async (req, res) => {
     }
 };
 
+const deleteLink = async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        if (!id) {
+            return res.status(400).json({ message: "Datos no encontrados"})
+        }
+        
+        const resultDelete = await Link.findByIdAndDelete(id)
+    
+        if(!resultDelete) {
+            return res.status(404).json({ message: "Recurso no encontrado" });
+        };
+    
+        res.status(200).json({message: "Recurso borrado correctamente"});
+    
+    } catch(error) {
+        return res.status(500).json({ message: "Error en el servidor", error: error.message });
+    }
+}
 
 
 
-export { createLinks, createTag, addComment, addVote };
+
+export { createLinks, createTag, updateLink, addComment, addVote, deleteLink };
