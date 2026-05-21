@@ -65,13 +65,13 @@ const updateLink = async(req, res) => {
         return res.status(400).json({ message : "Datos requeridos no encontrados" });
     };
 
-    const updateItem = await Link.findByIdAndUpdate(id, { title, url, description });
+    const updateItem = await Link.findByIdAndUpdate(id, { title, url, description }, { returnDocument: 'after' }); // Para que devuelva el documento actualizado.
 
     if(!updateItem) {
         return res.status(404).json({ message: "Recurso no encontrado" });
     }
 
-    res.status(200).json({ message: "Recurso actualizado correctamente", data: updateItem })
+    res.status(200).json(updateItem)
 }
 
 const addComment = async (req, res) => {
