@@ -2,7 +2,7 @@ import Link from '../models/linkCollection.js';
 import Tag from '../models/tagCollection.js';
 
 const getLinkDetails = async (req, res) => {
-    const { id } = req.params;
+    const { id } = req.params; // params se usa cuando se quiere un recurso especifico.
 
     try {
         const link = await Link.findById(id).populate('tag','name');
@@ -19,7 +19,7 @@ const getLinkDetails = async (req, res) => {
 };
 
 const filterTags = async (req, res) => {
-    const { id } = req.query;
+    const { id } = req.query; // La query filtran conjuntos de datos
     let filter = {};
 
     try {
