@@ -31,7 +31,7 @@ const createLinks = async (req, res) => {
         const newLink = new Link({ title, url, description, tag: tagDoc._id });
         const savedItem = await newLink.save();
         
-        res.status(201).json({ message: "Recurso creado exitosamente", data : savedItem });
+        res.status(201).json({ savedItem });
     
     } catch (error) {
         return res.status(500).json({ message: "Error en el servidor", error: error.message })
@@ -107,7 +107,7 @@ const addVote = async (req, res) => {
             return res.status(404).json({ message: "Enlace no encontrado" });
         }
         
-        res.status(200).json(updateVote);
+        res.status(200).json({ vote: updateVote.vote }); // Devolvemos solo los votos actualizados.
     
     } catch (error) {
         return res.status(500).json({ message: "Error en el servidor", error: error.message });
