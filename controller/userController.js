@@ -24,7 +24,7 @@ const createLinks = async (req, res) => {
         
         // Si no existe la etiqueta en la base de datos, la creamos y la guardamos
         if(!tagDoc) {
-            tagDoc = new Tag({ name: tag.trim() });
+            tagDoc = new Tag({ name: tag.trim().toLowerCase() });
             await tagDoc.save();
         }
         
@@ -44,13 +44,13 @@ const createTag = async(req, res) => {
     
     try {
         if(!name) {
-            res.status(400).json({ message: "Etiqueta no encontrada"});
+            return res.status(400).json({ message: "Etiqueta no encontrada"});
         }
         
-        const newName = new Tag({ name : name });
+        const newName = new Tag({ name : name.trim().toLowerCase() });
         const savedName = await newName.save();
         
-        res.status(200).json({ message: "Etiqueta creada exitosamente" });
+        res.status(200).json(savedName);
     
     } catch (error) {
         return res.status(500).json({ message: "Error en el servidor", error: error.message });
@@ -61,17 +61,23 @@ const updateLink = async(req, res) => {
     const { id } = req.params;
     const { title, url, description } = req.body;
 
-    if(!title || !url || !description) {
-        return res.status(400).json({ message : "Datos requeridos no encontrados" });
-    };
+    try {
+        if(!title || !url || !description) {
+            return res.status(400).json({ message : "Datos requeridos no encontrados" });
+        };
+    
+        const updateItem = await Link.findByIdAndUpdate(id, { title, url, description }, { returnDocument: 'after' }); // Para que devuelva el documento actualizado.
+    
+        if(!updateItem) {
+            return res.status(404).json({ message: "Recurso no encontrado" });
+        }
+    
+        res.status(200).json(updateItem)
+    
+    } catch(error) {
+        return res.status(500).json({ message: "Error en el servidor: ", error: error.message});
+    } 
 
-    const updateItem = await Link.findByIdAndUpdate(id, { title, url, description }, { returnDocument: 'after' }); // Para que devuelva el documento actualizado.
-
-    if(!updateItem) {
-        return res.status(404).json({ message: "Recurso no encontrado" });
-    }
-
-    res.status(200).json(updateItem)
 }
 
 const addComment = async (req, res) => {
@@ -79,9 +85,13 @@ const addComment = async (req, res) => {
     const { text } = req.body;
 
     try {
+        if(!text) {
+            return res.status(400).json({ message: "Comentario no encontrado"});
+        }
+
         const updateComment = await Link.findByIdAndUpdate(
             id, 
-            {$push: { comments: text }},
+            {$push: { comments: text }}, // operador especial que permite agregar un nuevo elemento al final del array.
             { returnDocument : 'after'}
         );
         
@@ -118,10 +128,6 @@ const deleteLink = async (req, res) => {
     const { id } = req.params;
 
     try {
-        if (!id) {
-            return res.status(400).json({ message: "Datos no encontrados"})
-        }
-        
         const resultDelete = await Link.findByIdAndDelete(id)
     
         if(!resultDelete) {
