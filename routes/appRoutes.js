@@ -1,11 +1,11 @@
 import { Router } from "express";
-import { getLinkDetails, filterTags, getTags } from "../controller/appController.js";
-import { get } from "mongoose";
+import { getLinkDetailsById, filterLinksByTag, getAllTags } from "../controller/appController.js";
+
 
 const router = Router();
 
-router.get('/links', filterTags);
-router.get('/details/:id', getLinkDetails);
-router.get('/tags', getTags);
+router.get('/links/', filterLinksByTag);
+router.get('/details/:id', getLinkDetailsById);
+router.get('/tags', getAllTags);
 
 export default router;
